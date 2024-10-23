@@ -434,7 +434,7 @@
           <div class="result-container">
             <h2>Your Shortened URL is ready!</h2>
             <div class="short-url-display">
-                <span class="url-text">http://localhost:5500/url/<%= urlResult.shorten_url %></span>
+                <span class="url-text">https://url-shortener-62ui.onrender.com/url/<%= urlResult.shorten_url %></span>
             </div>
             <a href="/" class="home-btn">Go to Home Page</a>
         </div>
@@ -459,7 +459,7 @@
                       <tr>
                       <td data-label="Serial No."><%= index + 1 %></td>
                       <td data-label="Original URL"><%= url.url %></td>
-                      <td data-label="Short URL"><a href="http://localhost:5500/url/<%= url.shorten_url %>" target="_blank" class="short-url"><%= url.shorten_url %></a></td>
+                      <td data-label="Short URL"><a href="https://url-shortener-62ui.onrender.com/url/<%= url.shorten_url %>" target="_blank" class="short-url"><%= url.shorten_url %></a></td>
                       <td data-label="Clicks"><span class="clicks"><%= url.visitHistory.length %></span></td>
                       <td data-label="Action">
                         <form action="/api/<%= url.shorten_url %>" method="post">
