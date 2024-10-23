@@ -52,7 +52,7 @@
             text-transform: uppercase;
             letter-spacing: 2px;
             background: var(--primary-gradient);
-            -webkit-background-clip: text;
+            background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: 800;
         }
@@ -307,6 +307,116 @@
         .cancel-delete {
             background: linear-gradient(135deg, #64748b 0%, #475569 100%);
         }
+
+        /* Responsive styles */
+@media (max-width: 1200px) {
+    .container {
+        max-width: 900px;
+        padding: 30px;
+    }
+
+    h1 {
+        font-size: 2.5em;
+    }
+}
+
+@media (max-width: 992px) {
+    .container {
+        max-width: 720px;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2.2em;
+    }
+
+    .input-group {
+        flex-direction: column;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        max-width: 600px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .short-url-display, .copy-btn {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .short-url-display .url-text {
+        margin-bottom: 10px;
+    }
+}
+
+/* Table responsive styles for small devices */
+@media (max-width: 576px) {
+    table, thead, tbody, th, td, tr {
+        display: block;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tr {
+        margin-bottom: 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    td {
+        display: block;
+        text-align: left;
+        padding: 10px;
+        position: relative;
+        border: none;
+    }
+
+    td::before {
+        content: attr(data-label); 
+        font-weight: bold;
+        color: var(--text-secondary);
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    td {
+        padding-left: 0;
+    }
+
+    .short-url {
+        word-break: break-all;
+    }
+
+    /* Adjust delete button to prevent it from taking up the full width */
+    .delete-btn {
+        display: inline-block; /* Change from block to inline-block */
+        width: auto; /* Adjust width so it doesn't stretch */
+        padding: 8px 15px; /* Keep padding intact */
+        margin-top: 10px;
+    }
+
+    .short-url {
+        display: inline-block;
+        margin-top: 10px;
+    }
+}
+
+
+
     </style>
 </head>
 <body>
@@ -347,11 +457,11 @@
                   
                     <% result.forEach((url, index) => { %>
                       <tr>
-                      <td><%= index + 1 %></td>
-                      <td><%= url.url %></td>
-                      <td><a href="http://localhost:5500/url/<%= url.shorten_url %>" target="_blank" class="short-url"><%= url.shorten_url %></a></td>
-                      <td><span class="clicks"><%= url.visitHistory.length %></span></td>
-                      <td>
+                      <td data-label="Serial No."><%= index + 1 %></td>
+                      <td data-label="Original URL"><%= url.url %></td>
+                      <td data-label="Short URL"><a href="http://localhost:5500/url/<%= url.shorten_url %>" target="_blank" class="short-url"><%= url.shorten_url %></a></td>
+                      <td data-label="Clicks"><span class="clicks"><%= url.visitHistory.length %></span></td>
+                      <td data-label="Action">
                         <form action="/api/<%= url.shorten_url %>" method="post">
                           <button class="delete-btn" type="submit">Delete</button></td>
 
