@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(180deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
+            --secondary-gradient: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+            --danger-gradient: linear-gradient(135deg, #ef4444 0%, #f43f5e 100%);
+            --success-gradient: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+            --primary-color: #2C5364;
+            --secondary-color: #3b82f6;
+            --accent-color: #8b5cf6;
+            --danger-color: #ef4444;
+            --success-color: #22c55e;
+            --background-color: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-light: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: var(--primary-gradient);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-primary);
+            font-size: 3em;
+            margin-bottom: 40px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        input[type="url"] {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            color: var(--text-primary);
+            background: white;
+        }
+
+        input[type="url"]:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        }
+
+        button {
+            padding: 15px 30px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(99, 102, 241, 0.2);
+        }
+
+        .result-container {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 40px;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .result-container h2 {
+            color: var(--text-primary);
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .short-url-display {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            background: var(--background-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .url-text {
+            flex: 1;
+            font-size: 16px;
+            color: var(--primary-color);
+            word-break: break-all;
+            font-weight: 500;
+        }
+
+        .copy-btn {
+            padding: 10px 20px;
+            background: var(--secondary-gradient);
+            border-radius: 8px;
+        }
+
+        .home-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--success-gradient);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .home-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(34, 197, 94, 0.2);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-top: 20px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: var(--background-color);
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .short-url {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .short-url:hover {
+            color: var(--accent-color);
+        }
+
+        .clicks {
+            font-weight: 600;
+            color: var(--secondary-color);
+            background: rgba(59, 130, 246, 0.1);
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+
+        .delete-btn {
+            padding: 8px 15px;
+            background: var(--danger-gradient);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .delete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            animation: modalFadeIn 0.3s ease-out;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal h3 {
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            font-size: 1.5em;
+            font-weight: 600;
+        }
+
+        .modal p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .modal-buttons button {
+            padding: 12px 24px;
+            font-size: 14px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .confirm-delete {
+            background: var(--danger-gradient);
+        }
+
+        .cancel-delete {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>URL Shortener</h1>
+        
+        <form method="post" action="/api">
+            <div class="input-group">
+                <input type="url" name="url" placeholder="Enter your URL here..." required>
+                <button type="submit">Shorten URL</button>
+            </div>
+        </form>
+
+        <% if (locals.urlResult) { %>
+          <div class="result-container">
+            <h2>Your Shortened URL is ready!</h2>
+            <div class="short-url-display">
+                <span class="url-text">http://localhost:5500/url/<%= urlResult.shorten_url %></span>
+            </div>
+            <a href="/" class="home-btn">Go to Home Page</a>
+        </div>
+        <% } %>
+
+        
+        <% if (locals.result) { %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Serial No.</th>
+                    <th>Original URL</th>
+                    <th>Short URL</th>
+                    <th>Clicks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                  
+                    <% result.forEach((url, index) => { %>
+                      <tr>
+                      <td><%= index + 1 %></td>
+                      <td><%= url.url %></td>
+                      <td><a href="http://localhost:5500/url/<%= url.shorten_url %>" target="_blank" class="short-url"><%= url.shorten_url %></a></td>
+                      <td><span class="clicks"><%= url.visitHistory.length %></span></td>
+                      <td>
+                        <form action="/api/<%= url.shorten_url %>" method="post">
+                          <button class="delete-btn" type="submit">Delete</button></td>
+
+                        </form>
+                    </tr>
+                    <% }) %>
+                  
+            </tbody>
+        </table>
+        <% } %>
+    </div>
+</body>
+</html>

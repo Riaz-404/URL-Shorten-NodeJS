@@ -17,8 +17,10 @@ const handlePostUrl = async (req, res) => {
   url.shorten_url = shorterUrlGenerator();
 
   await Data.create(url)
-    .then((result) => {
-      res.send(result);
+    .then((urlResult) => {
+      res.render("home", {
+        urlResult,
+      });
     })
     .catch((err) => {
       res.send("Error: " + err);
@@ -35,6 +37,16 @@ const handleGetUrl = async (req, res) => {
     .catch((err) => {
       console.log(err);
     });
+};
+
+const handleDeleteUrl = async (req, res) => {
+  const shorten_url = req.params.url;
+
+  await Data.findOneAndDelete({ shorten_url }).then(async () => {
+    const result = await Data.find({});
+
+    res.redirect("/");
+  });
 };
 
 const handleUrlAnalytics = async (req, res) => {
@@ -57,4 +69,5 @@ module.exports = {
   handlePostUrl,
   handleGetUrl,
   handleUrlAnalytics,
+  handleDeleteUrl,
 };
