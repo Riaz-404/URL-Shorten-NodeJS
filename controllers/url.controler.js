@@ -42,7 +42,10 @@ const handleUrlAnalytics = async (req, res) => {
 
   await Data.findOne({ shorten_url: url })
     .then((result) => {
-      res.send("Total visits: " + result.visits);
+      res.json({
+        "total visited": result.visitHistory.length,
+        "visited history": result.visitHistory,
+      });
     })
     .catch((err) => {
       console.log(err);

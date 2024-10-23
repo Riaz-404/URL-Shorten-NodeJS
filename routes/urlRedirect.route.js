@@ -8,10 +8,15 @@ urlRedirectRouter.route("/:url").get(async (req, res) => {
 
   await Data.findOne({ shorten_url: url }).then(async (result) => {
     const redirectedUrl = result.url;
-    let visitedCount = result.visits + 1;
     const id = result._id;
 
-    await Data.findByIdAndUpdate(id, { visits: visitedCount }).then(() => {
+    await Data.findByIdAndUpdate(id, {
+      $push: {
+        visitHistory: {
+          timestamps: Date.now(),
+        },
+      },
+    }).then(() => {
       res.redirect(redirectedUrl);
     });
   });

@@ -11,10 +11,7 @@ const dataSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    visits: {
-      type: Number,
-      default: 0,
-    },
+    visitHistory: [{ timestamps: { type: Date } }],
   },
   { timestamps: true }
 );
